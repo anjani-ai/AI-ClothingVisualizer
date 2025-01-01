@@ -1,0 +1,28 @@
+
+---
+
+### **Starter Code**
+
+#### **Backend (app.py)**
+```python
+from flask import Flask, request, jsonify
+import json
+
+app = Flask(__name__)
+
+# Mock data for clothing recommendations
+recommendations = {
+    "slim": ["Slim Fit Jeans", "Fitted Shirts"],
+    "athletic": ["Joggers", "Tank Tops"],
+    "curvy": ["A-Line Dresses", "High-Waist Pants"]
+}
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    data = request.json
+    body_type = data.get('body_type', 'slim')
+    result = recommendations.get(body_type, [])
+    return jsonify({"recommendations": result})
+
+if __name__ == '__main__':
+    app.run(debug=True)
