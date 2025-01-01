@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Clothing Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin: 50px auto;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Clothing Visualizer</h1>
+        <form id="recommendation-form">
+            <label for="body-type">Select Body Type:</label>
+            <select id="body-type" name="body-type">
+                <option value="slim">Slim</option>
+                <option value="athletic">Athletic</option>
+                <option value="curvy">Curvy</option>
+            </select>
+            <button type="submit">Get Recommendations</button>
+        </form>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('recommendation-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const bodyType = document.getElementById('body-type').value;
+
+            const response = await fetch('http://127.0.0.1:5000/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ body_type: bodyType })
+            });
+
+            const data = await response.json();
+            document.getElementById('output').innerHTML = `<h3>Recommendations:</h3><ul>${data.recommendations.map(item => `<li>${item}</li>`).join('')}</ul>`;
+        });
+    </script>
+</body>
+</html>
