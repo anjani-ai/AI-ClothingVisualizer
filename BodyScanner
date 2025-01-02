@@ -1,0 +1,79 @@
+import cv2
+import mediapipe as mp
+import numpy as np
+
+# Initialize MediaPipe Pose
+mp_pose = mp.solutions.pose
+mp_drawing = mp.solutions.drawing_utils
+pose = mp_pose.Pose()
+
+def calculate_measurements(landmarks):
+    """
+    Calculate approximate body measurements based on pose landmarks.
+    """
+    # Example: Calculate shoulder width
+    left_shoulder = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
+    right_shoulder = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
+    shoulder_width = np.linalg.norm(
+        np.array([left_shoulder.x, left_shoulder.y]) -
+        np.array([right_shoulder.x, right_shoulder.y])
+    )
+    
+    # Example: Calculate torso length
+    left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+    neck = landmarks[mp_pose.PoseLandmark.NOSE.value]
+    torso_length = np.linalg.norm(
+        np.array([left_hip.x, left_hip.y]) -
+        np.array([neck.x, neck.y])
+    )
+
+    return {
+        "shoulder_width": round(shoulder_width * 100, 2),  # Convert to cm approximation
+        "torso_length": round(torso_length * 100, 2)      # Convert to cm approximation
+    }
+
+def process_image(image):
+    """
+    Process an image to detect pose and calculate measurements.
+    """
+    # Convert image to RGB
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    results = pose.process(image_rgb)
+    
+    if results.pose_landmarks:
+        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        measurements = calculate_measurements(results.pose_landmarks.landmark)
+        return image, measurements
+    else:
+        return image, None
+
+def main():
+    # Open webcam
+    cap = cv2.VideoCapture(0)
+    print("Press 'q' to exit.")
+    
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to capture frame. Exiting...")
+            break
+        
+        processed_frame, measurements = process_image(frame)
+        
+        # Display measurements
+        if measurements:
+            cv2.putText(processed_frame, f"Shoulder Width: {measurements['shoulder_width']} cm",
+                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+            cv2.putText(processed_frame, f"Torso Length: {measurements['torso_length']} cm",
+                        (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        
+        cv2.imshow("Body Scanner", processed_frame)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
