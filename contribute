@@ -1,0 +1,9 @@
+# Contributing to AI Clothing Visualizer
+
+Thank you for considering contributing to this project! Here are some guidelines to help you get started.
+
+## How to Contribute
+1. Fork the repository.
+2. Clone your fork:
+   ```bash
+   git clone https://github.com/yourusername/ai-clothing-visualizer.git
