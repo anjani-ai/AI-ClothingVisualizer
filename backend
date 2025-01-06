@@ -1,0 +1,30 @@
+@app.route("/upload_measurements", methods=["POST"])
+def upload_measurements():
+    """
+    Receive body measurements and determine body type.
+    """
+    measurements = request.json
+    height = measurements.get("height")
+    weight = measurements.get("weight")
+    waist = measurements.get("waist")
+    hips = measurements.get("hips")
+    shoulder_width = measurements.get("shoulder_width")
+    chest = measurements.get("chest")
+    arm_length = measurements.get("arm_length")
+    thigh = measurements.get("thigh")
+
+    # Determine body type based on ratios and thresholds
+    if waist / hips < 0.75 and shoulder_width / hips < 0.85:
+        body_type = "pear"
+    elif chest / waist > 1.25 and hips / waist > 1.25:
+        body_type = "hourglass"
+    elif chest / waist < 1.0 and hips / waist < 1.0:
+        body_type = "rectangle"
+    elif weight / (height / 100) ** 2 > 30 and waist / hips > 0.9:
+        body_type = "apple"
+    elif chest / waist > 1.1 and shoulder_width / waist > 1.2:
+        body_type = "athletic"
+    else:
+        body_type = "curvy"
+
+    return jsonify({"body_type": body_type})
