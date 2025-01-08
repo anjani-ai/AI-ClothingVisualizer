@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Slim Fit Shirt",
+        "type": "shirt",
+        "color": "blue",
+        "material": "cotton",
+        "suitable_for": ["slim", "athletic", "rectangle"]
+    },
+    {
+        "id": 2,
+        "name": "A-Line Dress",
+        "type": "dress",
+        "color": "red",
+        "material": "silk",
+        "suitable_for": ["curvy", "pear", "hourglass"]
+    },
+    {
+        "id": 3,
+        "name": "Empire Waist Dress",
+        "type": "dress",
+        "color": "green",
+        "material": "chiffon",
+        "suitable_for": ["apple", "hourglass"]
+    },
+    {
+        "id": 4,
+        "name": "Wide-Leg Trousers",
+        "type": "pants",
+        "color": "black",
+        "material": "linen",
+        "suitable_for": ["pear", "curvy"]
+    },
+    {
+        "id": 5,
+        "name": "Athletic Joggers",
+        "type": "pants",
+        "color": "gray",
+        "material": "polyester",
+        "suitable_for": ["athletic", "slim"]
+    }
+]
